@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<odoo>
+
+        <record id="purchase_request_reject_view_form" model="ir.ui.view">
+            <field name="name">purchase.request.reject.view.form</field>
+            <field name="model">purchase.request.reject.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Rejection Reason">
+                    <group>
+                        <field name="reject_reason" placeholder="Enter the reason for rejection"/>
+                    </group>                  
+                    <footer>
+                        <button name="action_rejection_reason_apply" string="Submit" type="object"/>
+                        <button string="Cancel" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="purchase_request_reject_action" model="ir.actions.act_window">
+            <field name="name">Rejection Reason</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.request.reject.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="purchase_request_reject_view_form"/>
+            <field name="target">new</field>
+            <!-- <field name="context">{
+                'dialog_size' : 'medium',
+            }</field> -->
+        </record>
+
+</odoo>

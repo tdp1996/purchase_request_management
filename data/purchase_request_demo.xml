@@ -1,0 +1,81 @@
+<odoo>
+
+    <record id="department_it" model="hr.department">
+        <field name="name">IT</field>
+    </record>
+    <record id="department_marketing" model="hr.department">
+        <field name="name">Marketing</field>
+    </record>
+    <record id="department_sale" model="hr.department">
+        <field name="name">Sale</field>
+    </record>
+
+
+    <record id="user_demo_1" model="res.users">
+        <field name="name">Demo User 1</field>
+        <field name="login">demo_user_1</field>
+        <field name="groups_id" eval="[(6, 0, [ref('base.group_user')])]"/>
+    </record>
+    <record id="user_demo_2" model="res.users">
+        <field name="name">Demo User 2</field>
+        <field name="login">demo_user_2</field>
+        <field name="groups_id" eval="[(6, 0, [ref('base.group_user')])]"/>
+    </record>
+    <record id="user_demo_3" model="res.users">
+        <field name="name">Demo User 3</field>
+        <field name="login">demo_user_3</field>
+        <field name="groups_id" eval="[(6, 0, [ref('base.group_user')])]"/>
+    </record>
+    <record id="user_demo_4" model="res.users">
+        <field name="name">Demo User 4</field>
+        <field name="login">demo_user_4</field>
+        <field name="groups_id" eval="[(6, 0, [ref('base.group_user')])]"/>
+    </record>
+    <record id="manager_it" model="res.users">
+        <field name="name">Manager IT</field>
+        <field name="login">manager_it</field>
+        <field name="groups_id" eval="[(6, 0, [ref('purchase_request_management.group_purchase_request_manager')])]"/>
+    </record>
+    <record id="manager_mkt" model="res.users">
+        <field name="name">Manager MKT</field>
+        <field name="login">manager_mkt</field>
+        <field name="groups_id" eval="[(6, 0, [ref('purchase_request_management.group_purchase_request_manager')])]"/>
+    </record>
+    <record id="manager_sale" model="res.users">
+        <field name="name">Manager Sale</field>
+        <field name="login">manager_sale</field>
+        <field name="groups_id" eval="[(6, 0, [ref('purchase_request_management.group_purchase_request_manager')])]"/>
+    </record>
+    <record id="purchase_request_1" model="purchase.request">
+        <field name="department_id" ref="department_it"/> 
+        <field name="request_id" ref="user_demo_1"/>      
+        <field name="approver_id" ref="manager_it"/>     
+        <field name="date_request">2024-12-05</field>
+        <field name="state">draft</field>
+        <field name="description">Demo Purchase Request 1</field>
+    </record>
+    <record id="purchase_request_2" model="purchase.request">
+        <field name="department_id" ref="department_marketing"/> 
+        <field name="request_id" ref="user_demo_2"/>      
+        <field name="approver_id" ref="manager_mkt"/>     
+        <field name="date_request">2024-12-05</field>
+        <field name="state">wait</field>
+        <field name="description">Demo Purchase Request 2</field>
+    </record>
+    <record id="purchase_request_3" model="purchase.request">
+        <field name="department_id" ref="department_sale"/> 
+        <field name="request_id" ref="user_demo_3"/>      
+        <field name="approver_id" ref="manager_sale"/>     
+        <field name="date_request">2024-12-05</field>
+        <field name="state">approved</field>
+        <field name="description">Demo Purchase Request 3</field>
+    </record>
+    <record id="purchase_request_4" model="purchase.request">
+        <field name="department_id" ref="department_sale"/> 
+        <field name="request_id" ref="user_demo_4"/>      
+        <field name="approver_id" ref="manager_sale"/>     
+        <field name="date_request">2024-12-05</field>
+        <field name="state">cancel</field>
+        <field name="description">Demo Purchase Request 4</field>
+    </record>
+</odoo>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem
+        id="menu_purchase_request_root"
+        name="Purchase Request"
+        action="action_purchase_request"
+        groups = "base.group_user"
+        sequence="1"/>
+
+        <menuitem
+            id="menu_purchase_request_line"
+            name="Purchase Request Line"
+            action="action_purchase_request_line"
+            parent="menu_purchase_request_root"
+            groups="base.group_user"
+            sequence="10"/> 
+        
+        <!-- <menuitem 
+            id="menu_purchase_products" 
+            name="Products" 
+            parent="menu_purchase_request_root"
+            action="product_normal_action_puchased_requested"
+            sequence="5"/> -->
+
+    <!-- <record id="product_normal_action_puchased_requested" model="ir.actions.act_window">
+        <field name="name">Products</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="context">{"search_default_filter_to_purchase":1, "purchase_product_template": 1}</field>
+        <field name="search_view_id" ref="product.product_template_search_view"/>
+        <field name="view_id" eval="False"/>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            No product found. Let's create one!
+          </p><p>
+            You must define a product for everything you sell or purchase,
+            whether it's a storable product, a consumable or a service.
+          </p>
+        </field>
+    </record> -->
+
+</odoo>
