@@ -41,9 +41,9 @@
         'wizard/purchase_request_reject.xml'
     ],
     # only loaded in demonstration mode
-    'demo': [
-        'demo/demo.xml',
-    ],
+    # 'demo': [
+    #     'demo/demo.xml',
+    # ],
     'application': True,
     'installable': True,
 }
