@@ -13,12 +13,23 @@
         <field name="domain_force">['|', ('create_uid', '=', user.id), ('create_uid.employee_parent_id', '=', user.id)]</field>
         <field name="groups" eval="[(4, ref('purchase_request_management.group_purchase_request_manager'))]"/>
     </record>
-    <record id="purchase_request_modify_only_draft_rule" model="ir.rule">
+    <record id="purchase_request_line_user_rule" model="ir.rule">
+        <field name="name">User: View Own Detail Records</field>
+        <field name="model_id" ref="model_purchase_request_line"/>
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('purchase_request_management.group_purchase_request_user'))]"/>
+    </record>
+    <record id="purchase_request_line_manager_rule" model="ir.rule">
+        <field name="name">Manager: View Own and Employee Detail Records</field>
+        <field name="model_id" ref="model_purchase_request_line"/>
+        <field name="domain_force">['|', ('create_uid', '=', user.id), ('create_uid.employee_parent_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('purchase_request_management.group_purchase_request_manager'))]"/>
+    </record>
+    <record id="purchase_request_line_modify_only_draft_rule" model="ir.rule">
         <field name="name">Only Modify Purchase Request In Draft State</field>
-        <field name="model_id" ref="model_purchase_request"/>
+        <field name="model_id" ref="model_purchase_request_line"/>
         <field name="domain_force">[('state', '=', 'draft')]</field>
         <field name="perm_create" eval="1"/>
-        <field name="perm_write" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
 
