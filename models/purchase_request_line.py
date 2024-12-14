@@ -42,13 +42,6 @@ class PurchaseRequestLine(models.Model):
         string="Total", 
         readonly=True)
 
-    @api.ondelete(at_uninstall=False)
-    def _unlink_request_line_if_not_draft(self):
-        for request in self:
-            if request.state != "draft":
-                raise UserError(
-                    _("You cannot delete a request line that is not in draft state..")
-                )
 
     @api.depends("qty", "product_id.list_price", "price_unit", "qty_approve")
     def _compute_total(self):
