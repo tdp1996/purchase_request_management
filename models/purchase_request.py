@@ -80,6 +80,19 @@ class PurchaseRequest(models.Model):
         compute="_compute_total_amount", 
         string="Total Amount")
 
+    @api.model
+    def create(self, vals):
+        if vals.get("name", "New") == "New":
+            vals["name"] = self.env["ir.sequence"].next_by_code("purchase.request")
+            return super(PurchaseRequest, self).create(vals)
+        
+    def unlink(self):
+        # Only allow to delete purchase requests in draft state
+        for record in self:
+            if record.state != 'draft':
+                raise UserError(_("You can only delete purchase requests in the Draft state."))
+        return super(PurchaseRequest, self).unlink()
+
     @api.depends("request_line_ids.qty", "request_line_ids.qty_approve")
     def _compute_total_quantity(self):
         for record in self:
@@ -92,12 +105,6 @@ class PurchaseRequest(models.Model):
     def _compute_total_amount(self):
         for record in self:
             record.total_amount = sum(line.total for line in record.request_line_ids)
-
-    @api.model
-    def create(self, vals):
-        if vals.get("name", "New") == "New":
-            vals["name"] = self.env["ir.sequence"].next_by_code("purchase.request")
-            return super(PurchaseRequest, self).create(vals)
     
 
     # ACTIONS
@@ -117,6 +124,8 @@ class PurchaseRequest(models.Model):
     def action_request_approval(self):
         if any(line.qty == 0.00 for line in self.request_line_ids):
             raise ValidationError("The quantity for all request lines must be greater than zero.")
+        elif len(self.request_line_ids) == 0:
+            raise ValidationError("You must add purchase request details")
         self.state = "wait"
 
     def action_pr_approve(self):
