@@ -41,7 +41,26 @@ class PurchaseRequestLine(models.Model):
         compute="_compute_total", 
         string="Total", 
         readonly=True)
+    
+    @api.model
+    def create(self, vals):
+        purchase_request = self.env['purchase.request'].browse(vals.get('request_id'))
+        if purchase_request.state != 'draft':
+            raise UserError(_("You can only add purchase request details in 'Draft' state."))
+        return super(PurchaseRequestLine, self).create(vals)
 
+    def unlink(self):
+        for record in self:
+            if record.state != 'draft':
+                raise UserError(_("You can only delete purchase request details in 'Draft' state."))
+        return super(PurchaseRequestLine, self).unlink()
+
+    def write(self, vals):
+        for record in self:
+            if record.state != 'draft':
+                if record.state == 'wait' and 'qty_approve' in vals:
+                    pass 
+        return super(PurchaseRequestLine, self).write(vals)
 
     @api.depends("qty", "product_id.list_price", "price_unit", "qty_approve")
     def _compute_total(self):
@@ -69,4 +88,4 @@ class PurchaseRequestLine(models.Model):
     def _onchange_qty_approve_and_price(self):
         for record in self:
             price = record.price_unit or record.product_id.list_price
-            record.total = (record.qty_approve or 0.0) * price
+            record.total = record.qty_approve * price

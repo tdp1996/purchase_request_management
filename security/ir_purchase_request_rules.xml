@@ -25,12 +25,5 @@
         <field name="domain_force">['|', ('create_uid', '=', user.id), ('create_uid.employee_parent_id', '=', user.id)]</field>
         <field name="groups" eval="[(4, ref('purchase_request_management.group_purchase_request_manager'))]"/>
     </record>
-    <record id="purchase_request_line_modify_only_draft_rule" model="ir.rule">
-        <field name="name">Only Modify Purchase Request In Draft State</field>
-        <field name="model_id" ref="model_purchase_request_line"/>
-        <field name="domain_force">[('state', '=', 'draft')]</field>
-        <field name="perm_create" eval="1"/>
-        <field name="perm_unlink" eval="1"/>
-    </record>
 
 </odoo>
