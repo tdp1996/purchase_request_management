@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-
+import xlsxwriter
+import base64
+from io import BytesIO
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, UserError
 
@@ -90,7 +92,7 @@ class PurchaseRequest(models.Model):
         # Only allow to delete purchase requests in draft state
         for record in self:
             if record.state != 'draft':
-                raise UserError(_("You can only delete purchase requests in the Draft state."))
+                raise UserError(_("You can only delete purchase requests in the 'Quotation' state."))
         return super(PurchaseRequest, self).unlink()
 
     @api.depends("request_line_ids.qty", "request_line_ids.qty_approve")
@@ -165,4 +167,48 @@ class PurchaseRequest(models.Model):
             },
             'target': 'current',
         }
+    
+    def export_request_lines_to_excel(self):
+        for record in self:
+            if record.state != 'approved':
+                raise UserError(_("You can only export request details in 'Approved' state."))
+            
+            output = BytesIO()
+            workbook = xlsxwriter.Workbook(output)
+            worksheet = workbook.add_worksheet('Request Details')
+
+            bold = workbook.add_format({'bold': True})
+            worksheet.write('A1', 'Product', bold)
+            worksheet.write('B1', 'Unit Of Measure', bold)
+            worksheet.write('C1', 'Unit Price', bold)
+            worksheet.write('D1', 'Quantity', bold)
+            worksheet.write('E1', 'Total', bold)
+            
+            row = 1
+            for line in record.request_line_ids:
+                worksheet.write(row, 0, line.product_id.name)
+                worksheet.write(row, 1, line.product_id.uom_id.name)
+                worksheet.write(row, 2, line.price_unit)
+                worksheet.write(row, 3, line.qty_approve)
+                worksheet.write(row, 4, line.total)
+                row += 1
+            
+            workbook.close()
+            output.seek(0)
+
+            attachment_id = self.env['ir.attachment'].create({
+                'name': f'Purchase_Request_{record.name}.xlsx',
+                'type': 'binary',
+                'datas': base64.b64encode(output.read()),
+                'res_model': self._name,
+                'res_id': self.id,
+                'mimetype': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            })
+            output.close()
+
+            return {
+                'type': 'ir.actions.act_url',
+                'url': f'/web/content/{attachment_id.id}?download=true',
+                'target': 'self',
+            }
 

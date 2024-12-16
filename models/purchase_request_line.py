@@ -46,13 +46,13 @@ class PurchaseRequestLine(models.Model):
     def create(self, vals):
         purchase_request = self.env['purchase.request'].browse(vals.get('request_id'))
         if purchase_request.state != 'draft':
-            raise UserError(_("You can only add purchase request details in 'Draft' state."))
+            raise UserError(_("You can only add purchase request details in 'Quotation' state."))
         return super(PurchaseRequestLine, self).create(vals)
 
     def unlink(self):
         for record in self:
             if record.state != 'draft':
-                raise UserError(_("You can only delete purchase request details in 'Draft' state."))
+                raise UserError(_("You can only delete purchase request details in 'Quotation' state."))
         return super(PurchaseRequestLine, self).unlink()
 
     def write(self, vals):
