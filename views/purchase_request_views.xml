@@ -72,7 +72,7 @@
                                         <create name="add_product_control" string="Add a product"/>
                                     </control>
                                     <field name="state" invisible="1" attrs="{'readonly': [('state', 'in', ('wait',' approved', 'cancel'))]}"/>
-                                    <field name="product_id" attrs="{'readonly': [('state', 'in', ('wait',' approved', 'cancel'))]}"/>
+                                    <field name="product_id" attrs="{'readonly': [('state', 'in', ('wait',' approved', 'cancel'))]}" option="{'no_create: true}"/>
                                     <field name="uom_id" attrs="{'readonly': [('state', 'in', ('wait',' approved', 'cancel'))]}"/>
                                     <field name="price_unit" attrs="{'readonly': [('state', 'in', ('wait',' approved', 'cancel'))]}"/>
                                     <field name="qty" attrs="{'readonly': [('state', 'in', ('wait',' approved', 'cancel'))]}"/>
