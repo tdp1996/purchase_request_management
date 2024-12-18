@@ -125,17 +125,17 @@ class PurchaseRequest(models.Model):
 
     def action_request_approval(self):
         if any(line.qty == 0.00 for line in self.request_line_ids):
-            raise ValidationError("The quantity for all request lines must be greater than zero.")
+            raise UserError("The quantity for all request lines must be greater than zero.")
         elif len(self.request_line_ids) == 0:
-            raise ValidationError("You must add purchase request details")
+            raise UserError(_("You must add purchase request details"))
         self.state = "wait"
 
     def action_pr_approve(self):
         if any(
-            line.qty_approve == 0.00 or line.qty_approve > line.qty
+            line.qty_approve <= 0.00 or line.qty_approve > line.qty
             for line in self.request_line_ids
         ):
-            raise ValidationError(
+            raise UserError(
                 "The approved quantity must be greater than zero and cannot exceed the requested quantity."
             )
         self.date_approve = fields.Date.context_today(self)
@@ -170,8 +170,6 @@ class PurchaseRequest(models.Model):
     
     def export_request_lines_to_excel(self):
         for record in self:
-            if record.state != 'approved':
-                raise UserError(_("You can only export request details in 'Approved' state."))
             
             output = BytesIO()
             workbook = xlsxwriter.Workbook(output)
